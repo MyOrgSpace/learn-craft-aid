@@ -24,14 +24,12 @@ const LessonCreate = () => {
   });
 
   const subjects = [
-    { value: "math", label: "Mathematics", color: "bg-subject-math" },
-    { value: "science", label: "Science", color: "bg-subject-science" },
-    { value: "language", label: "Language Arts", color: "bg-subject-language" },
-    { value: "social", label: "Social Studies", color: "bg-subject-social" },
-    { value: "arts", label: "Arts & Crafts", color: "bg-subject-arts" }
+    { value: "maths", label: "Mathematics", color: "bg-subject-math" },
+    { value: "english", label: "English", color: "bg-subject-science" },
+    { value: "hindi", label: "Hindi", color: "bg-subject-language" }
   ];
 
-  const grades = ["K", "1", "2", "3", "4", "5", "6"];
+  const grades = ["1", "2", "3", "4", "5"];
 
   const handleSubmit = () => {
     if (!formData.title || !formData.subject || !formData.grade) {
@@ -51,7 +49,7 @@ const LessonCreate = () => {
     // Navigate back to dashboard
     setTimeout(() => navigate("/teacher"), 1500);
   };
-
+/** 
   const generateContent = () => {
     const sampleContent = `# ${formData.title || "Sample Lesson"}
 
@@ -83,6 +81,48 @@ Summarize key points and preview next lesson.`;
       description: "AI has created a lesson structure for you",
     });
   };
+*/
+const generateContent = async () => {
+  try {
+    // Construct the API endpoint and request body based on your backend
+    const apiEndpoint = '/api/generateLessonContent'; // Replace with your actual endpoint
+    const requestBody = {
+      title: formData.title,
+      subject: formData.subject,
+      grade: formData.grade,
+      // Add other relevant formData properties as needed by your API
+    };
+
+    const response = await fetch(apiEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Assuming your API returns the generated content in a field named 'content'
+    setFormData(prev => ({ ...prev, content: data.content }));
+
+    toast({
+      title: "Content Generated!",
+      description: "AI has created lesson content for you",
+    });
+  } catch (error) {
+    console.error("Error generating content:", error);
+    toast({
+      title: "Error",
+      description: "Failed to generate lesson content",
+      variant: "destructive",
+    });
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-warm p-6">
@@ -131,7 +171,7 @@ Summarize key points and preview next lesson.`;
                     <Input
                       id="duration"
                       type="number"
-                      placeholder="40"
+                      placeholder="10"
                       value={formData.duration}
                       onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))}
                     />
