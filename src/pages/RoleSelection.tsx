@@ -24,7 +24,7 @@ const RoleSelection = () => {
                   <BookOpen className="h-8 w-8" />
                 </div>
                 <h1 className="text-5xl font-bold">
-                  LearnCraft Aid
+                  Sahayak
                 </h1>
               </div>
             </div>
